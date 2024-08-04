@@ -4,6 +4,9 @@ package com.sbs.exam.sbb;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 
 //@Controller : 스필부트한테 해당 클래스는 컨트롤러 역할이라고 알려준다
 
@@ -99,5 +102,30 @@ public class HomeController {
 
         increaseNo++;
         return increaseNo;
+    };
+
+    @GetMapping("/gugudan")
+
+    @ResponseBody
+    public String gugudan(Integer dan, Integer limit){
+        //increaseNo를 전역 변수로 선언한다! private를 사용하여 HomeController에서만 활용가능하도록 함
+        //전역변수로 선언한  increaeNo를 기본생성자를 통해서 기본값을 초기화 해준다!
+        // increaeNo = -1
+        // 위 increase페이지로 이동할때마다 +1씩 증가하도록함
+
+        if(dan == null){
+            dan = 1;
+        }
+
+        if(limit == null){
+            limit = 9;
+        }
+        //final 선언 : 상수선언(상수 = 변하지 않는값)
+        final Integer FinalDan = dan;
+
+        return IntStream.rangeClosed(1 , limit)//1~limit
+                .mapToObj(i->"%d * %d = %d".formatted(FinalDan, i ,FinalDan * i))
+                .collect(Collectors.joining("<br>"));
+
     };
 }
