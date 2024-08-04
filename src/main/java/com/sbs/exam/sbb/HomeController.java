@@ -10,6 +10,14 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class HomeController {
 
+    private int increaseNo;
+
+    public HomeController() { //생성자
+
+        increaseNo = -1;
+
+    }
+
     @RequestMapping("/sbb")
     //@ResponseBody
     //아래 함수의 리턴갑서을 그대로 브라우저에 표시
@@ -61,7 +69,6 @@ public class HomeController {
                 """.formatted(age);
     }
 
-
     @PostMapping("/page2")
 
     @ResponseBody
@@ -73,4 +80,24 @@ public class HomeController {
                 <h1>안녕하세요. Post방식으로 오신걸 환영합니다.</h>
                 """.formatted(age);
     }
+
+    @GetMapping("/plus")
+
+    @ResponseBody
+    public int showPlus(@RequestParam(defaultValue = "0")int a, @RequestParam(defaultValue = "0")int b){
+        return a + b;
+    }
+
+    @GetMapping("/increase")
+
+    @ResponseBody
+    public int increae(){
+        //increaseNo를 전역 변수로 선언한다! private를 사용하여 HomeController에서만 활용가능하도록 함
+        //전역변수로 선언한  increaeNo를 기본생성자를 통해서 기본값을 초기화 해준다!
+        // increaeNo = -1
+        // 위 increase페이지로 이동할때마다 +1씩 증가하도록함
+
+        increaseNo++;
+        return increaseNo;
+    };
 }
