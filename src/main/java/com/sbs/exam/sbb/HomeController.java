@@ -1,6 +1,8 @@
 package com.sbs.exam.sbb;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -105,7 +107,6 @@ public class HomeController {
     };
 
     @GetMapping("/gugudan")
-
     @ResponseBody
     public String gugudan(Integer dan, Integer limit){
         //increaseNo를 전역 변수로 선언한다! private를 사용하여 HomeController에서만 활용가능하도록 함
@@ -128,4 +129,27 @@ public class HomeController {
                 .collect(Collectors.joining("<br>"));
 
     };
-}
+
+
+    //★세션
+    @GetMapping("/saveSession/{name}/{value}")
+    @ResponseBody
+    public String saveSession(@PathVariable String name, @PathVariable String value , HttpServletRequest req){
+
+        HttpSession session = req.getSession();
+
+        session.setAttribute(name, value);
+
+        return "세션변수의 %s의 값이 %s(으)로 설정되었습니다.".formatted(name,value);
+    };
+    //설정한 session값 가져오기
+    @GetMapping("/getSession/{name}")
+    @ResponseBody
+    public String saveSession(@PathVariable String name,HttpSession session) {
+
+        String value = (String) session.getAttribute(name);
+
+        return "세션변수의 %s의 값이 %s(으)로 설정되었습니다.".formatted(name, value);
+    };
+
+    }
