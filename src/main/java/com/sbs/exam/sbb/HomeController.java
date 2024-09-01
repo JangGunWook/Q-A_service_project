@@ -253,6 +253,22 @@ public class HomeController {
     }
 
 
+    @GetMapping("/article/detail/{title}")
+    @ResponseBody
+    public List<Article>  getArticle(@PathVariable String title){
+
+        List<Article> article = articles.stream()
+                .filter(t -> title.equals(t.getTitle()) || title.equals(t.body)) //검색어가 제목, 내용에 포함 되어 있는지 체크
+                //.findFirst() //선택된 첫번째 것을 가져와라(하나만 가져옴)
+                .collect(Collectors.toList());
+                //.orElse();// 선택된게 없으면 null 값을 반환하라
+
+            return  article;
+
+    }
+
+
+
     @AllArgsConstructor //생성자 만들기
     @Data //getter,seter생성
     class Animal{
