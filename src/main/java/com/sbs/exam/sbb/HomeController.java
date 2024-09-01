@@ -3,9 +3,12 @@ package com.sbs.exam.sbb;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -16,10 +19,14 @@ import java.util.stream.IntStream;
 public class HomeController {
 
     private int increaseNo;
+    private List<Article> articles;
+
+
 
     public HomeController() { //생성자
 
         increaseNo = -1;
+        articles = new ArrayList<>();
 
     }
 
@@ -152,4 +159,144 @@ public class HomeController {
         return "세션변수의 %s의 값이 %s(으)로 설정되었습니다.".formatted(name, value);
     };
 
+    @GetMapping("/home/returnMap")
+    @ResponseBody
+    public Map<String, Object> showRetrunMap(){
+
+        // HashMap<>()같은 경우 순서를 보장할 수 없음
+        // LinkedHashMap<>() 순서를 보장할 수 있음
+        Map<String, Object> map = new LinkedHashMap<>(){{
+            put("id",1);
+            put("age",5);
+            put("name", "푸바오");
+            put("related", new ArrayList<>(){{
+                add(2);
+                add(3);
+                add(4);
+                add(5);
+            }});
+        }};
+        return map;
+    };
+
+
+    @GetMapping("/home/returnMapAnimal2")
+    @ResponseBody
+    public Animal2 showRetrunAnimal2(){
+
+        Animal2 animal2 = new Animal2(1, 20,"포비", new ArrayList<>(){{
+            add(2);
+            add(33);
+            add(44);
+
+        }});
+        animal2.setName(animal2.getName() + "v2");
+        return animal2;
+    };
+
+    @GetMapping("/home/returnAnimalMapList")
+    @ResponseBody
+    public List<Map<String ,Object>> ShowreturnAnimalMapList(){
+
+        Map<String, Object> map1 = new LinkedHashMap<>(){{
+            put("id",1);
+            put("age",5);
+            put("name", "푸바오");
+            put("related", new ArrayList<>(){{
+                add(2);
+                add(3);
+                add(4);
+                add(5);
+            }});
+        }};
+
+        Map<String, Object> map2 = new LinkedHashMap<>(){{
+            put("id",1);
+            put("age",5);
+            put("name", "찐따오");
+            put("related", new ArrayList<>(){{
+                add(2);
+                add(4);
+                add(5);
+                add(6);
+            }});
+        }};
+
+        List<Map<String ,Object>> list = new ArrayList<>();
+        list.add(map1);
+        list.add(map2);
+
+        return list;
+
+    };
+
+    @GetMapping("addArticle")
+    @ResponseBody
+    public String addArticle(String title, String body){
+        Article article = new Article(title, body);
+
+        //HomeController에서 생성한 초기 생성자 Article class의 기본생성자를
+        articles.add(article);
+        System.out.println(article);
+        //System.out.println(Article.lastId);
+
+        return "%d번 게시물이 추가되었습니다.".formatted(article.getId());
     }
+
+
+    @GetMapping("/article/list")
+    @ResponseBody
+    public List<Article> getArticles(){
+
+        // HomeController 시작시 생성자에 넣어 놓은 List<Article> articles 이다
+        return articles;
+    }
+
+
+    @AllArgsConstructor //생성자 만들기
+    @Data //getter,seter생성
+    class Animal{
+        private final int id;
+
+        private final int age;
+
+        private final String name;
+
+        private final List<Integer> related; //식별번호
+    };
+
+    @AllArgsConstructor //생성자 만들기
+    @Data //getter,seter생성
+    class Animal2{
+    private final int id;
+
+    private final int age;
+
+    private  String name;
+
+    private  List<Integer> related; //식별번호
+    };
+
+
+    @AllArgsConstructor
+    @Data
+    class Article{
+
+         static int lastId; //static 서버내 올라가있는 값
+
+
+        private final int id;
+        private final String title;
+        private final String body;
+
+        // 프로그램이 시작할때 담고 있는 데이터의 기본값
+        static {
+            lastId = 0;
+        }
+
+        public Article(String title, String body){
+            this(++lastId, title, body);
+        }
+
+        }
+};
