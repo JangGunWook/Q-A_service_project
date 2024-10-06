@@ -8,7 +8,10 @@ import lombok.Data;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -302,8 +305,8 @@ public class HomeController {
 
 
         private final int id;
-        private final String title;
-        private final String body;
+        private  String title;
+        private  String body;
 
         // 프로그램이 시작할때 담고 있는 데이터의 기본값
         static {
