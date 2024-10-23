@@ -3,6 +3,7 @@ package com.sbs.exam.sbb;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity//아래 Question 크래스는 엔터티 클래스이다
@@ -21,5 +22,9 @@ public class Question {
     private String content;
 
     private LocalDateTime crateDate;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE) //CascadeType.REMOVE : Question에 달려있는 Answer클래스의 answer까지 자동으로 삭제됨
+    // 실제 테이블에는 생성되지 않음! DB컬럼에는 정보를 1개만 넣을 수 있기 때문이다
+    private List<Answer> answerList;
 
 }
